@@ -3,6 +3,7 @@ from consts import  WordAndTag
 END_OF_SENTENCE = '\n'
 END_OF_WORD = '\n'
 
+
 def read_test_file(file_path):
     """
     :param file_path: the file path
@@ -26,8 +27,7 @@ def read_test_file(file_path):
     return sentences
 
 
-
-def read_gold_file(file_path):
+def read_gold_and_train_file(file_path):
     """
     :param file_path: the file path
     :type str

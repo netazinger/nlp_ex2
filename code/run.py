@@ -1,5 +1,5 @@
 from evaluation import recall, f_score, macro_avg
-from parse_data import read_test_file, read_gold_file
+from parse_data import read_test_file, read_gold_and_train_file
 
 
 print f_score({1,2}, {1})
@@ -12,4 +12,4 @@ file_path = '/Users/netazinger/Documents/universaty/nlp/ex2/nlp_ex2/data-files/h
 print len(read_test_file(file_path))
 
 file_path = '/Users/netazinger/Documents/universaty/nlp/ex2/nlp_ex2/data-files/heb-pos.gold'
-print read_gold_file(file_path)
+print read_gold_and_train_file(file_path)
