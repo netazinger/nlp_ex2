@@ -1,4 +1,4 @@
-from consts import  WordAndTag
+from consts import WordAndTag
 
 END_OF_SENTENCE = '\n'
 END_OF_WORD = '\n'
