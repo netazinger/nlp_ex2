@@ -24,6 +24,30 @@ class SegmentCalculator:
                     if word != UNK and word != "" and word.find("#") == -1:
                         corpus_length += 1
             except IndexError:
-                print 'calculation error occuer'
+                print 'Error: calculation error occuer'
 
         return CalculationResult(len(unigram_frequencies), corpus_length)
+
+    def calcReliabilityMeasurment(self):
+        reliabilityMeasurmentDict = dict()
+        for sentence in self.sentences:
+            try:
+                word = sentence[0]
+                if word != UNK and word != "" and word.find("#") == -1:
+                    tagListInDict =  reliabilityMeasurmentDict.get( word)
+                    if(tagListInDict == None):
+                        reliabilityMeasurmentDict[word] = [sentence[1]]
+                    else:
+                        if(sentence[1] not in tagListInDict):
+                            tagListInDict.append(sentence[1])
+                
+            except IndexError:
+                    print 'Error: calculation error occuer'
+        return self.calcATagAverageForSegment(reliabilityMeasurmentDict)
+
+    def calcATagAverageForSegment(self,reliabilityMeasurmentDict):
+        numberOfSegment = len(reliabilityMeasurmentDict)
+        sumTags = 0
+        for key in reliabilityMeasurmentDict:
+            sumTags +=  len(reliabilityMeasurmentDict[key])
+        return float(sumTags) / max(numberOfSegment, 1)

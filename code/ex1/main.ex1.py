@@ -9,7 +9,7 @@ def main():
  reader = Reader(path)
  sentence =  reader.read_sentences_from_file()
  segmentCalculator = SegmentCalculator(sentence)
- result = segmentCalculator.findUnigramLanguageModel(True)
+ result = segmentCalculator.calcReliabilityMeasurment()
  print(result)
 
  
