@@ -3,6 +3,8 @@ from collections import namedtuple
 
 WordAndTag = namedtuple("WordAndTag", ["word", "tag"])
 
+def print_word_and_tag(word_and_tag):
+    return "{word} {tag}".format(word_and_tag.word, word_and_tag.tag)
 
 
 class Model():

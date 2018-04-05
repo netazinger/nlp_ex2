@@ -16,7 +16,7 @@ def read_test_file(file_path):
 
     sentences = list()
     sentence = list()
-    # import ipdb; ipdb.set_trace() # NO_COMMIT
+
     for l in file.readlines():
         if l == END_OF_SENTENCE:
             if sentence != END_OF_SENTENCE:
@@ -39,11 +39,10 @@ def read_gold_and_train_file(file_path):
 
     sentences = list()
     sentence = list()
-    # import ipdb; ipdb.set_trace() # NO_COMMIT
+
     for l in file.readlines():
         if l == END_OF_SENTENCE:
             if sentence != END_OF_SENTENCE:
-                import ipdb; ipdb.set_trace() # NO_COMMIT
                 sentences.append(sentence)
             sentence = []
         else:

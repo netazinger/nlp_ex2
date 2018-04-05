@@ -4,10 +4,10 @@ import os
 from collections import defaultdict
 from collections import Counter
 
-from consts import WordAndTag, UNKNOWN_TAG
+from consts import WordAndTag, UNKNOWN_TAG, Model
 
 sys.path.append(os.path.abspath(os.path.join(__file__, "../..")))
-# os.path.abspath(os.path.join(__file__, os.pardir))
+
 
 def get_segment_to_tags(taged_data_set):
     segment_to_tags = defaultdict(list)
@@ -22,7 +22,7 @@ def get_segment_to_tags(taged_data_set):
     return segment_to_tags
 
 
-def find_most_common_tag_for_segment(segment_to_tags,unknown_tag=None):
+def find_most_common_tag_for_segment(segment_to_tags, unknown_tag=None):
     unknown_tag = unknown_tag or UNKNOWN_TAG
     segment_to_tag = defaultdict(lambda: unknown_tag)
     for segment, tags in segment_to_tags.iteritems():
@@ -31,10 +31,39 @@ def find_most_common_tag_for_segment(segment_to_tags,unknown_tag=None):
 
 
 def tag_file(parsed_file_to_tag, segment_to_tag):
-    taged_file = []
+    tagged_file = []
     for sentence in parsed_file_to_tag:
-        taged_file.append([WordAndTag(word=word, tag=segment_to_tag[word]) for word in sentence])
-    return taged_file
+        tagged_file.append([WordAndTag(word=word, tag=segment_to_tag[word]) for word in sentence])
+    return tagged_file
+
+
+def write_train_baseline(parsed_train, original_file_name):
+    segment_to_tags = get_segment_to_tags(parsed_train)
+    segment_to_tag = find_most_common_tag_for_segment(segment_to_tags)
+    file = open(original_file_name + "." + Model.BASELINE, "w")
+    for segment, tag in segment_to_tag.iteritems():
+        file.write("%s %s\n" % (segment, tag))
+    file.close()
+
+
+def parse_train_baseline_tag(baseline_tag):
+    return WordAndTag(*map(lambda x: x.replace('\n', ''), baseline_tag.split(" ")))
+
+
+def read_train_baseline(file_name_path, unknown_tag=None):
+    unknown_tag = unknown_tag or UNKNOWN_TAG
+    with open(file_name_path) as f:
+        content = f.readlines()
+
+    segment_to_tag = defaultdict(lambda: unknown_tag)
+    for word_and_tag in map(parse_train_baseline_tag, content):
+        segment_to_tag[word_and_tag.word] = word_and_tag.tag
+    return segment_to_tag
+
+
+
+
+
 
 
 

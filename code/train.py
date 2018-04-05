@@ -1,7 +1,11 @@
 #!/usr/bin/env python
 import sys
+import os
+
 
 from consts import WordAndTag, Model
+from ex2.ex2 import write_train_baseline
+from parse_data import read_gold_and_train_file
 
 
 def train(model, train_file_path, smoothing=False):
@@ -9,10 +13,16 @@ def train(model, train_file_path, smoothing=False):
     if model not in Model.ALL_MODELS:
         raise RuntimeError("model %s is not supported. only support : %s" % (model, Model.ALL_MODELS))
 
+    parsed_train = read_gold_and_train_file(train_file_path)
+
+    _, file_name = os.path.split(train_file_path)
+
+    if model == Model.BASELINE:
+        write_train_baseline(parsed_train, file_name)
 
 def main():
     if 4 != len(sys.argv):
-        print "wrong number of args. we got %s, but we support 3" % len(sys.argv)
+        print "wrong number of args. we got %s, but we support 3" % len(sys.argv) - 1
         return
 
     model = sys.argv[1]
