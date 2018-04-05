@@ -11,3 +11,6 @@ class Model():
     TRI_GRAM = 'tri-gram'
 
     ALL_MODELS = {BASELINE, BI_GRAM, TRI_GRAM}
+
+UNKNOWN_TAG = "NNP"
+UNKNOWN_SEG = "UNKNOWN_SEG"
