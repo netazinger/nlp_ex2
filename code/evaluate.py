@@ -53,7 +53,7 @@ def evaluate(tagged_file_path, model, gold_file_path, smoothing=False):
     _, file_name = os.path.split(tagged_file_path)
     file_name, file_extension = os.path.splitext(file_name)
 
-    file = open(file_name + ".eval" , "w")
+    file = open(file_name + ".eval", "w")
     for i in range(len(parsed_tagged_file)):
         seg_accuracy = calc_word_accuracy_for_sentence(parsed_tagged_file[i], parsed_gold_file[i])
         sent_accuracy = calc_sentence_accuracy_for_sentence(parsed_tagged_file[i], parsed_gold_file[i])

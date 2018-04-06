@@ -5,7 +5,10 @@ import os
 
 from consts import WordAndTag, Model
 from ex2.ex2 import write_train_baseline
+from ex3.ex3 import write_gram_file
 from parse_data import read_gold_and_train_file
+
+
 
 
 def train(model, train_file_path, smoothing=False):
@@ -14,11 +17,15 @@ def train(model, train_file_path, smoothing=False):
         raise RuntimeError("model %s is not supported. only support : %s" % (model, Model.ALL_MODELS))
 
     parsed_train = read_gold_and_train_file(train_file_path)
-
     _, file_name = os.path.split(train_file_path)
 
     if model == Model.BASELINE:
         write_train_baseline(parsed_train, file_name)
+    elif model == Model.BI_GRAM:
+        write_gram_file(parsed_train, file_name, gram_level=2)
+    elif model == Model.TRI_GRAM:
+        write_gram_file(parsed_train, file_name, gram_level=3)
+
 
 def main():
     if 4 != len(sys.argv):

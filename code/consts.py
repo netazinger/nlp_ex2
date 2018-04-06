@@ -16,3 +16,7 @@ class Model():
 
 UNKNOWN_TAG = "NNP"
 UNKNOWN_SEG = "UNKNOWN_SEG"
+
+
+EOS = "EOS"
+BOS = "BOS"
