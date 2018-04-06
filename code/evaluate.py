@@ -9,6 +9,21 @@ from parse_data import read_gold_and_train_file
 EVAL_LINE_FORMAT = "{sent_num} {seg_accuracy} {sent_accuracy}\n"
 EVAL_MACO_AVG_FORMAT = "macro-avg {seg_accuracy_all} {sent_accuracy_all}"
 
+EVAL_TITLE_FORMAT = \
+"""
+# ---------------------------------
+# Part-of-Speech Tagging Evaluation
+# ---------------------------------
+# Model: {model}
+# Smoothing: {smoothing}
+# Test File: : {test_file}
+# Gold File: : {gold_file}
+# ---------------------------------
+"""
+
+SEP_LINE = "# ---------------------------------\n"
+
+
 
 def calc_word_accuracy_for_sentence(sentence, sentence_gold):
     if len(sentence) != len(sentence_gold):
@@ -54,6 +69,10 @@ def evaluate(tagged_file_path, model, gold_file_path, smoothing=False):
     file_name, file_extension = os.path.splitext(file_name)
 
     file = open(file_name + ".eval", "w")
+
+    file.write(EVAL_TITLE_FORMAT.format(model=model, test_file=tagged_file_path, gold_file=gold_file_path,
+                                        smoothing= "y" if smoothing else "f"))
+
     for i in range(len(parsed_tagged_file)):
         seg_accuracy = calc_word_accuracy_for_sentence(parsed_tagged_file[i], parsed_gold_file[i])
         sent_accuracy = calc_sentence_accuracy_for_sentence(parsed_tagged_file[i], parsed_gold_file[i])
@@ -61,6 +80,7 @@ def evaluate(tagged_file_path, model, gold_file_path, smoothing=False):
 
     seg_accuracy_all = calc_word_accuracy_for_corpus(parsed_tagged_file, parsed_gold_file)
     sent_accuracy_all = calc_sentence_accuracy_for_corpus(parsed_tagged_file, parsed_gold_file)
+    file.write(SEP_LINE)
     file.write(EVAL_MACO_AVG_FORMAT.format(seg_accuracy_all=seg_accuracy_all, sent_accuracy_all=sent_accuracy_all))
     file.close()
 
