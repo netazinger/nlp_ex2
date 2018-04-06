@@ -16,7 +16,7 @@ def calc_word_accuracy_for_sentence(sentence, sentence_gold):
     num_of_true_tagging = 0
     for i in range(len(sentence)):
         num_of_true_tagging += 1 if sentence[i] == sentence_gold[i] else 0
-    return num_of_true_tagging / len(sentence)
+    return float(num_of_true_tagging) / len(sentence)
 
 
 def calc_sentence_accuracy_for_sentence(sentence, sentence_gold):
@@ -30,13 +30,13 @@ def calc_word_accuracy_for_corpus(test, gold):
     res = 0
     for i in range(len(test)):
         res += calc_word_accuracy_for_sentence(test[i], gold[i]) * len(test[i])
-    return res / sum(map(len, test))
+    return float(res) / sum(map(len, test))
 
 
 def calc_sentence_accuracy_for_corpus(test, gold):
     if len(test) != len(gold):
         raise RuntimeError("not in same length")
-    return sum([calc_sentence_accuracy_for_sentence(test[i], gold[i]) for i in range(len(test))]) / len(test)
+    return sum([calc_sentence_accuracy_for_sentence(test[i], gold[i]) for i in range(len(test))]) / float(len(test))
 
 
 def evaluate(tagged_file_path, model, gold_file_path, smoothing=False):
