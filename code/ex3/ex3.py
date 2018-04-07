@@ -41,6 +41,7 @@ def calc_lex_result(parse_train_file):
 
     return segment_to_tags_and_prob
 
+
 def write_lex_file(parse_train_file, output_file_path):
     segment_to_tags_and_prob = calc_lex_result(parse_train_file)
     file = open(output_file_path + ".lex","w")
@@ -50,7 +51,6 @@ def write_lex_file(parse_train_file, output_file_path):
             file.write("\t%s\t%s" % (tag, prob))
         file.write("\n")
     file.close()
-
 
 
 def calc_gram_result(parse_train_file, gram_level=1):
