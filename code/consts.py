@@ -23,5 +23,8 @@ class Model():
 UNKNOWN_TAG = "NNP"
 UNKNOWN_SEG = "UNKNOWN_SEG"
 
+NUM_OF_GRAM = 'num_of_gram'
+GRAM_PROB_DICT = 'gram_prob_dict'
+
 EOS = "EOS"
 BOS = "BOS"

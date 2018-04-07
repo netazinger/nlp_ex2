@@ -109,7 +109,7 @@ def write_gram_file(parse_train_file, output_file_path):
     for gram_level, gram_prob_by_order in [(1, gram_result['uni_gram_prob_by_order']), (2, gram_result['bi_gram_prob_by_order'])]:
         file.write("\%s-grams\\\n" % gram_level)
         for gram_and_prob in gram_prob_by_order:
-            file.write("%s\t%s\n" % (gram_and_prob[1], " ".join(gram_and_prob[0])))
+            file.write("%s\t%s\n" % (gram_and_prob[1], "\t".join(gram_and_prob[0])))
         file.write("\n")
     file.close()
 
