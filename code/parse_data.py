@@ -62,8 +62,7 @@ def read_lex_file(file_path):
         line_part = l.replace("\n", "").split("\t")
         seg = line_part[0]
         for i in range(1, len(line_part), 2):
-            print seg, line_part[i], i
             tag = line_part[i]
-            prob = line_part[i + 1]
+            prob = float(line_part[i + 1])
             seg_to_tag_to_prob[seg][tag] = prob
     return seg_to_tag_to_prob
