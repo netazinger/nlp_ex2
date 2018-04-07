@@ -6,11 +6,13 @@ from consts import WordAndTag, Model
 from ex2.ex2 import read_train_baseline, tag_file
 from parse_data import read_test_file
 
+
 def print_word_and_tag(word_and_tag):
     return "{word}\t{tag}".format(word=word_and_tag.word, tag=word_and_tag.tag)
 
-def write_tagged_file(tagged_file, file_name):
-    file = open(file_name + ".tagged","w")
+
+def write_tagged_file(tagged_file, file_name, exrantion=".tagged"):
+    file = open(file_name + exrantion,"w")
     for tagged_sentance in tagged_file:
         for word_and_tag in tagged_sentance:
             file.write(print_word_and_tag(word_and_tag) + '\n')

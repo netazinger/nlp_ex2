@@ -1,5 +1,10 @@
-from collections import defaultdict
+import sys
+import os
+from collections import Counter, defaultdict
 
+sys.path.append(os.path.abspath(os.path.join(__file__, "../..")))
+from parse_data import read_gold_and_train_file
+from decode import write_tagged_file
 
 def calc_confusion_matrix(tagged_tested, gold):
     confusion_matrix_dict = defaultdict(lambda:defaultdict(int))
@@ -24,4 +29,31 @@ def save_confusion_matrix(confusion_matrix_dict, file_name):
         file.write("\n")
 
     file.close()
+
+
+def chunks(seq, num_of_sublist):
+    seq_len = len(seq)
+    if seq_len < num_of_sublist:
+        yield seq
+    else:
+        split_size = 1.0 / num_of_sublist * seq_len
+        for i in range(num_of_sublist):
+            yield seq[int(round(i * split_size)):int(round((i + 1) * split_size))]
+
+
+
+def split_train_file(train_file, chunk_size=10):
+    parsed_train_file = read_gold_and_train_file(train_file)
+    train_chuncks = list(chunks(parsed_train_file, chunk_size))
+    if not os.path.isdir("train"):
+        os.mkdir("train")
+    for i in range(len(train_chuncks)):
+        train_to_write = []
+        for chunk in train_chuncks[:(i + 1)]:
+            train_to_write += chunk
+        write_tagged_file(train_to_write, "train/train_%s" % (i + 1), ".train")
+
+
+
+
 

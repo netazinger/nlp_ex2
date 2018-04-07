@@ -79,10 +79,6 @@ def calc_gram_result(parse_train_file, gram_level=1):
     bi_gram_list_length = len(bi_gram_list)
 
     uni_gram_count[(BOS,)] = len(parse_train_file)
-    for bi_gram, count in bi_gram_count.iteritems():
-        # if uni_gram_count[(bi_gram[0],)] == 0:
-        #     import ipdb; ipdb.set_trace() # NO_COMMIT
-        x = math.log(float(count) / uni_gram_count[(bi_gram[0],)])
     bi_gram_to_prob = {bi_gram: math.log(float(count) / uni_gram_count[(bi_gram[0],)]) for bi_gram, count in bi_gram_count.iteritems()}
 
     uni_gram_prob_by_order = sorted([(gram, prob) for gram, prob in uni_gram_to_prob.iteritems()], key=lambda x: x[1])
