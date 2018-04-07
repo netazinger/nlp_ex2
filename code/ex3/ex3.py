@@ -2,10 +2,11 @@ import sys
 import os
 import math
 from collections import Counter, defaultdict
+import operator
 
 sys.path.append(os.path.abspath(os.path.join(__file__, "../..")))
 
-from consts import prob_post_processing, EOS, BOS
+from consts import prob_post_processing, EOS, BOS, GRAM_PROB_DICT, WordAndTag
 from ex2.ex2 import get_segment_to_tags
 
 
@@ -73,10 +74,10 @@ def calc_gram_result(parse_train_file, gram_level=1):
     uni_gram_count = Counter(uni_gram_list)
     bi_gram_count = Counter(bi_gram_list)
 
-    uni_gram_list_length = len(uni_gram_list)
+    uni_gram_list_length = len(set(uni_gram_list))
     uni_gram_to_prob = {uni_gram: math.log(float(count) / uni_gram_list_length) for uni_gram, count in uni_gram_count.iteritems()}
 
-    bi_gram_list_length = len(bi_gram_list)
+    bi_gram_list_length = len(set(bi_gram_list))
 
     uni_gram_count[(BOS,)] = len(parse_train_file)
     bi_gram_to_prob = {bi_gram: math.log(float(count) / uni_gram_count[(bi_gram[0],)]) for bi_gram, count in bi_gram_count.iteritems()}
@@ -108,6 +109,46 @@ def write_gram_file(parse_train_file, output_file_path):
             file.write("%s\t%s\n" % (gram_and_prob[1], "\t".join(gram_and_prob[0])))
         file.write("\n")
     file.close()
+
+
+def viterbi_sentence(sentence, gram_prob_dict, seg_to_tag_to_prob, tags, gram_level=2):
+    padded_sentence = [BOS] * (gram_level - 1) + sentence + [EOS] * (gram_level - 1)\
+
+    matrix = [[0] * len(tags) for i in range(len(sentence))]
+    sentence_tag = []
+
+    seg = sentence[0]
+    for tag_index in range(len(tags)):
+        matrix[0][tag_index] = seg_to_tag_to_prob[seg][tags[tag_index]]
+    max_index, max_value = max(enumerate(matrix[0]), key=operator.itemgetter(1))
+    sentence_tag.append(tags[max_index])
+
+    for i in range(gram_level - 1,  len(sentence)):
+        seg = sentence[i]
+
+        for tag_index in range(len(tags)):
+            tag = tags[0]
+            gram_prob = gram_prob_dict[(tag, sentence_tag[i - 1])]
+
+            matrix[i][tag_index] += seg_to_tag_to_prob[seg][tags[0]] + gram_prob
+        max_index, max_value = max(enumerate(matrix[i]), key=operator.itemgetter(1))
+        sentence_tag.append(tags[max_index])
+
+    return sentence_tag
+
+
+def viterbi(parse_test, gram_result, seg_to_tag_to_prob, gram_level=2):
+    gram_prob_dict = gram_result[GRAM_PROB_DICT]
+    tags = list({tags[0] for tags in gram_prob_dict})
+    tagged_data = []
+
+    for sentence in parse_test:
+        sentence_tag = viterbi_sentence(sentence, gram_prob_dict, seg_to_tag_to_prob, tags, gram_level=2)
+        tagged_data.append([WordAndTag(sentence[i], sentence_tag[i]) for i in range(len(sentence))])
+    return tagged_data
+
+
+
 
 
 #

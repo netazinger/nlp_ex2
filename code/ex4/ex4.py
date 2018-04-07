@@ -6,11 +6,11 @@ sys.path.append(os.path.abspath(os.path.join(__file__, "../..")))
 from parse_data import read_gold_and_train_file
 from decode import write_tagged_file
 
+
 def calc_confusion_matrix(tagged_tested, gold):
     confusion_matrix_dict = defaultdict(lambda:defaultdict(int))
-    flat_gold =          [word_and_tag for sentance in gold for word_and_tag in sentance]
+    flat_gold = [word_and_tag for sentance in gold for word_and_tag in sentance]
     flat_tagged_tested = [word_and_tag for sentance in tagged_tested for word_and_tag in sentance]
-    all_tags = {word_and_tag.tag for word_and_tag in flat_gold} | {word_and_tag.tag for word_and_tag in flat_tagged_tested}
 
     assert len(flat_gold) == len(flat_tagged_tested)
     for i in range(len(flat_gold)):
@@ -39,7 +39,6 @@ def chunks(seq, num_of_sublist):
         split_size = 1.0 / num_of_sublist * seq_len
         for i in range(num_of_sublist):
             yield seq[int(round(i * split_size)):int(round((i + 1) * split_size))]
-
 
 
 def split_train_file(train_file, chunk_size=10):
