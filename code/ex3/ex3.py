@@ -20,35 +20,29 @@ def calc_lex_result(parse_train_file):
 
     # get all tags
     all_tags = [word_and_tag.tag for word_and_tag in flat_train_list]
+    all_seg = {word_and_tag.word for word_and_tag in flat_train_list}
 
     # count tags, and seg and tag
     tag_counter = Counter(all_tags)
     word_tag_counter = Counter(flat_train_list)
+    all_tags = set(all_tags)
 
-    # calc p(w_i | t_i)
-    prob_of_word_if_known_tag = {
-        word_and_tag: prob_post_processing(float(word_tag_counter[word_and_tag]) / tag_counter[word_and_tag.tag])
-        for word_and_tag in flat_train_list
-    }
-
-    segment_to_tags = get_segment_to_tags(parse_train_file)
-    segment_to_tags_and_prob = defaultdict(list)
-
-    for segment, tags in segment_to_tags.iteritems():
-        for tag in tags:
-            prob = prob_of_word_if_known_tag[(segment, tag)]
-            segment_to_tags_and_prob[segment].append((tag, prob))
-
-    return segment_to_tags_and_prob
+    seg_to_tag_to_prob = defaultdict(dict)
+    for seg in all_seg:
+        for tag in all_tags:
+            word_tag_count = float(word_tag_counter[(seg, tag)])
+            if word_tag_count:
+                seg_to_tag_to_prob[seg][tag] = prob_post_processing(word_tag_count / tag_counter[tag])
+    return seg_to_tag_to_prob
 
 
 def write_lex_file(parse_train_file, output_file_path):
-    segment_to_tags_and_prob = calc_lex_result(parse_train_file)
-    file = open(output_file_path + ".lex","w")
-    for segment, tags_prob_list in segment_to_tags_and_prob.iteritems():
+    seg_to_tag_to_prob = calc_lex_result(parse_train_file)
+    file = open(output_file_path + ".lex", "w")
+    for segment, tag_to_prob in seg_to_tag_to_prob.iteritems():
         file.write(segment)
-        for tag, prob in tags_prob_list:
-            file.write("\t%s\t%s" % (tag, prob))
+        for tag in sorted(tag_to_prob.keys()):
+            file.write("\t%s\t%s" % (tag, tag_to_prob[tag]))
         file.write("\n")
     file.close()
 
