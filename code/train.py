@@ -5,7 +5,7 @@ import os
 
 from consts import WordAndTag, Model
 from ex2.ex2 import write_train_baseline
-from ex3.ex3 import write_gram_file
+from ex3.ex3 import write_gram_file, write_lex_file
 from parse_data import read_gold_and_train_file
 
 
@@ -22,6 +22,7 @@ def train(model, train_file_path, smoothing=False):
     if model == Model.BASELINE:
         write_train_baseline(parsed_train, file_name)
     elif model == Model.BI_GRAM:
+        write_lex_file(parsed_train, file_name)
         write_gram_file(parsed_train, file_name)
         # write_gram_file(parsed_train, file_name, gram_level=2)
     elif model == Model.TRI_GRAM:

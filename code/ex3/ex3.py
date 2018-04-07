@@ -1,11 +1,55 @@
-from consts import EOS, BOS
-from collections import Counter
+import sys
+import os
 import math
+from collections import Counter, defaultdict
+
+sys.path.append(os.path.abspath(os.path.join(__file__, "../..")))
+
+from consts import prob_post_processing, EOS, BOS
+from ex2.ex2 import get_segment_to_tags
 
 
 def split_to_grams(l, n):
     for i in range(0, len(l) - n + 1):
         yield tuple(l[i:i + n])
+
+
+def calc_lex_result(parse_train_file):
+    # flatten list
+    flat_train_list = [word_and_tag for sentance in parse_train_file for word_and_tag in sentance]
+
+    # get all tags
+    all_tags = [word_and_tag.tag for word_and_tag in flat_train_list]
+
+    # count tags, and seg and tag
+    tag_counter = Counter(all_tags)
+    word_tag_counter = Counter(flat_train_list)
+
+    # calc p(w_i | t_i)
+    prob_of_word_if_known_tag = {
+        word_and_tag: prob_post_processing(float(word_tag_counter[word_and_tag]) / tag_counter[word_and_tag.tag])
+        for word_and_tag in flat_train_list
+    }
+
+    segment_to_tags = get_segment_to_tags(parse_train_file)
+    segment_to_tags_and_prob = defaultdict(list)
+
+    for segment, tags in segment_to_tags.iteritems():
+        for tag in tags:
+            prob = prob_of_word_if_known_tag[(segment, tag)]
+            segment_to_tags_and_prob[segment].append((tag, prob))
+
+    return segment_to_tags_and_prob
+
+def write_lex_file(parse_train_file, output_file_path):
+    segment_to_tags_and_prob = calc_lex_result(parse_train_file)
+    file = open(output_file_path + ".lex","w")
+    for segment, tags_prob_list in segment_to_tags_and_prob.iteritems():
+        file.write(segment)
+        for tag, prob in tags_prob_list:
+            file.write("\t%s\t%s" % (tag, prob))
+        file.write("\n")
+    file.close()
 
 
 
