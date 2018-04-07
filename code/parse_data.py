@@ -56,7 +56,7 @@ def read_gold_and_train_file(file_path):
 
 def read_lex_file(file_path):
     file = open(file_path, 'r')
-    seg_to_tag_to_prob = defaultdict(dict)
+    seg_to_tag_to_prob = defaultdict(lambda: defaultdict(lambda: -11)) # need to change
     for l in file.readlines():
         line_part = l.replace("\n", "").split("\t")
         seg = line_part[0]
@@ -97,7 +97,7 @@ def read_gram_file(file_path):
         line = file_lines[i]
         if parse_gram_mark(line):
             gram_level = parse_gram_mark(line)
-            gram_prob_dict = dict()
+            gram_prob_dict = defaultdict(lambda: -11)
         elif line == '\n':
             gram_level_to_gram_data[gram_level][GRAM_PROB_DICT] = gram_prob_dict
         else:
