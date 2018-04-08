@@ -60,8 +60,6 @@ class Viterbi:
                         max_tag = None
                         # word|Tag prob
                         for v in self.S(k):
-                            if(k==2  and u =='VB' and v =='yyQUOT'):
-                                m=4
                             wordProb = (e_values.get(sent_words[k - 1],
                                                      defultSet)).get(u)
                             if wordProb != 0 and wordProb != None:
@@ -121,8 +119,7 @@ def main():
     lexFile = read_lex_file(lexPath)
     uniqeTags = getAllTags(gramFile, lexFile)
     _Viterbi = Viterbi(uniqeTags)
-    	
-    sentence = ["yyQUOT THIH NQMH W BGDWL yyDOT","AIF LA NISH LHSTIR ZAT yyDOT"]
+    sentence = ["yyQUOT THIH NQMH W BGDWL yyDOT","AIF LA NISH LHSTIR ZAT yyDOT","AIF LA	NPGE yyDOT"]
     tags = _Viterbi.algoritem(sentence, gramFile[2]['gram_prob_dict'], lexFile)
 
 
