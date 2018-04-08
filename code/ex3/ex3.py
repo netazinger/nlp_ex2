@@ -23,7 +23,7 @@ def calc_lex_result(parse_train_file):
     all_tags = [word_and_tag.tag for word_and_tag in flat_train_list]
     all_seg = {word_and_tag.word for word_and_tag in flat_train_list}
 
-    # count tags, and seg and tag
+    # couunt tags, and seg and tag
     tag_counter = Counter(all_tags)
     word_tag_counter = Counter(flat_train_list)
     all_tags = set(all_tags)
