@@ -2,9 +2,11 @@
 import sys
 import os
 
-from consts import WordAndTag, Model
+from consts import WordAndTag, Model, GRAM_PROB_DICT
 from ex2.ex2 import read_train_baseline, tag_file
-from parse_data import read_test_file
+from ex3.ex3 import viterbi
+from ex3_decoder.viterbi import Viterbi
+from parse_data import read_test_file, read_gram_file, read_lex_file
 
 
 def print_word_and_tag(word_and_tag):
@@ -34,10 +36,28 @@ def decode(model, test_file_path, param_files_path):
     if model == Model.BASELINE:
         segment_to_tag = read_train_baseline(param_files_path[0])
         tagged_file = tag_file(parsed_test_file, segment_to_tag)
-
         write_tagged_file(tagged_file, file_name)
     elif model == Model.BI_GRAM:
-        pass
+        if len(param_files_path) != 2:
+            raise RuntimeError("need to have 2 files got: %s" % param_files_path)
+
+        _, file_extension_0 = os.path.splitext(param_files_path[0])
+        _, file_extension_1 = os.path.splitext(param_files_path[1])
+
+        if {file_extension_0, file_extension_1} != {".lex", ".gram"}:
+            raise RuntimeError("wrong file extension. got: %s, %s" % (file_extension_0, file_extension_1))
+        lex_path =  param_files_path[0] if file_extension_0 == ".lex" else param_files_path[1]
+        gram_path =  param_files_path[0] if file_extension_0 == ".gram" else param_files_path[1]
+        gram_file = read_gram_file(gram_path)
+        lex_file = read_lex_file(lex_path)
+        gram_prob_dict = gram_file[1][GRAM_PROB_DICT]
+        tags = list({tags[0] for tags in gram_prob_dict})
+        # viterbi = Viterbi(tags)
+        # sentence = ["yyQUOT THIH NQMH W BGDWL yyDOT","AIF LA NISH LHSTIR ZAT yyDOT","AIF LA	NPGE yyDOT"]
+        # tagged_file = viterbi.algoritem(parsed_test_file, gram_file[2][GRAM_PROB_DICT], lex_file)
+
+        tagged_file = viterbi(parsed_test_file, gram_file[2], lex_file, gram_level=2)
+        write_tagged_file(tagged_file, file_name)
     elif model == Model.TRI_GRAM:
         pass
 

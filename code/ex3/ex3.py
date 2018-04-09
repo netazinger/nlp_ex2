@@ -119,18 +119,23 @@ def viterbi_sentence(sentence, gram_prob_dict, seg_to_tag_to_prob, tags, gram_le
 
     seg = sentence[0]
     for tag_index in range(len(tags)):
-        matrix[0][tag_index] = seg_to_tag_to_prob[seg][tags[tag_index]]
+        tag = tags[tag_index]
+        matrix[0][tag_index] = gram_prob_dict[("NNP", tag)] + seg_to_tag_to_prob[seg][tag]
+
     max_index, max_value = max(enumerate(matrix[0]), key=operator.itemgetter(1))
     sentence_tag.append(tags[max_index])
 
     for i in range(gram_level - 1,  len(sentence)):
         seg = sentence[i]
-
         for tag_index in range(len(tags)):
             tag = tags[0]
-            gram_prob = gram_prob_dict[(tag, sentence_tag[i - 1])]
-
-            matrix[i][tag_index] += seg_to_tag_to_prob[seg][tags[0]] + gram_prob
+            v_s = []
+            for tag_index_1 in range(len(tags)):
+                v_s_prob = gram_prob_dict[(tags[tag_index_1], tag)] + seg_to_tag_to_prob[seg][tags[tag_index]] + matrix[i - 1][tag_index_1]
+                v_s.append(v_s_prob)
+            # gram_prob = gram_prob_dict[( sentence_tag[i - 1], tag)]
+            max_index, max_value = max(enumerate(v_s), key=operator.itemgetter(1))
+            matrix[i][tag_index] = max_value
         max_index, max_value = max(enumerate(matrix[i]), key=operator.itemgetter(1))
         sentence_tag.append(tags[max_index])
 

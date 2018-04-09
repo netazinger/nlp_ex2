@@ -3,7 +3,7 @@ import os
 import traceback
 sys.path.append(os.path.abspath(os.path.join(__file__, "../..")))
 from collections import defaultdict, deque
-from consts import EOS, BOS
+from consts import EOS, BOS, WordAndTag
 from parse_data import read_lex_file, read_gram_file
 
 START_SYMBOL = BOS
@@ -49,8 +49,7 @@ class Viterbi:
 
         # Initialization
         pi[(0, START_SYMBOL, START_SYMBOL)] = 0.0
-        for line in input_sentences:
-            sent_words = line.split()
+        for sent_words in input_sentences:
             n = len(sent_words)
             try:
                 # u is the current item , v is all the passable tag before me
@@ -64,7 +63,7 @@ class Viterbi:
                                                      defultSet)).get(u)
                             if wordProb != 0 and wordProb != None:
                                 # if e_values.get((sent_words[k-1], v), 0) != 0:
-                                # π(k,u,v)=maxw∈Sk−2(π(k−1,v)⋅q(u∣v)⋅P(word∣u))
+
                                 score = pi.get((k - 1, v),LOG_PROB_OF_ZERO) + q_values.get((u,v), LOG_PROB_OF_ZERO) + wordProb
                                 if score > max_score:
                                     max_score = score
@@ -77,6 +76,7 @@ class Viterbi:
 
             max_score = float('-Inf')
             v_max = None
+            # u_max = "NNP"
 
             tags = deque()
             for u in self.S(n-1):
@@ -92,7 +92,6 @@ class Viterbi:
 
             tags.append(u_max)
             tags.append(v_max)
-        
 
             try:
                 for i, k in enumerate(range(n, 0, -1)):
@@ -105,21 +104,28 @@ class Viterbi:
 
             tagged_sentence = deque()
             for j in range(0, n):
-                tagged_sentence.append(sent_words[j] + '/' + tags[j])
+                tagged_sentence.append(WordAndTag(sent_words[j], tags[j]))
             tagged_sentence.append('\n')
-            tagged.append(' '.join(tagged_sentence))
+            tagged.append(tagged_sentence)
         return tagged
 
 
 def main():
-    lexPath = os.getcwd() + "\\data-training-files\\heb-pos.train.lex"
-    gramPath = os.getcwd() + "\\data-training-files\\heb-pos.train.gram"
+    # lexPath = os.getcwd() + "\\data-training-files\\heb-pos.train.lex"
+    # gramPath = os.getcwd() + "\\data-training-files\\heb-pos.train.gram"
+
+    lexPath = "/Users/netazinger/Documents/universaty/nlp/ex2/nlp_ex2/data-training-files/heb-pos.train.lex"
+    gramPath = "/Users/netazinger/Documents/universaty/nlp/ex2/nlp_ex2/data-training-files/heb-pos.train.gram"
 
     gramFile = read_gram_file(gramPath)
     lexFile = read_lex_file(lexPath)
     uniqeTags = getAllTags(gramFile, lexFile)
     _Viterbi = Viterbi(uniqeTags)
-    sentence = ["yyQUOT THIH NQMH W BGDWL yyDOT","AIF LA NISH LHSTIR ZAT yyDOT","AIF LA	NPGE yyDOT"]
+    sentence = [
+        "yyQUOT THIH NQMH W BGDWL yyDOT".split(" "),
+        "AIF LA NISH LHSTIR ZAT yyDOT".split(" "),
+        "AIF LA	NPGE yyDOT".split(" ")
+    ]
     tags = _Viterbi.algoritem(sentence, gramFile[2]['gram_prob_dict'], lexFile)
 
 
