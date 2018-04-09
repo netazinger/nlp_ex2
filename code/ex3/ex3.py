@@ -64,7 +64,7 @@ def calc_gram_result(parse_train_file, gram_level=1):
     # calc gram
     uni_gram_list = []
 
-    for sentance in parse_words:
+    for sentance in padded_data:
         uni_gram_list.extend(split_to_grams(sentance, 1))
 
     bi_gram_list = []
@@ -79,7 +79,7 @@ def calc_gram_result(parse_train_file, gram_level=1):
 
     bi_gram_list_length = len(set(bi_gram_list))
 
-    uni_gram_count[(BOS,)] = len(parse_train_file)
+    # uni_gram_count[(BOS,)] = len(parse_train_file)
     bi_gram_to_prob = {bi_gram: math.log(float(count) / uni_gram_count[(bi_gram[0],)]) for bi_gram, count in bi_gram_count.iteritems()}
 
     uni_gram_prob_by_order = sorted([(gram, prob) for gram, prob in uni_gram_to_prob.iteritems()], key=lambda x: x[1])

@@ -56,7 +56,7 @@ def decode(model, test_file_path, param_files_path):
         # sentence = ["yyQUOT THIH NQMH W BGDWL yyDOT","AIF LA NISH LHSTIR ZAT yyDOT","AIF LA	NPGE yyDOT"]
         # tagged_file = viterbi.algoritem(parsed_test_file, gram_file[2][GRAM_PROB_DICT], lex_file)
 
-        tagged_file = viterbi(parsed_test_file, gram_file[2], lex_file, gram_level=2)
+        tagged_file = viterbi(parsed_test_file, gram_file, lex_file, gram_level=2)
         write_tagged_file(tagged_file, file_name)
     elif model == Model.TRI_GRAM:
         pass
