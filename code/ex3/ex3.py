@@ -114,13 +114,12 @@ def write_gram_file(parse_train_file, output_file_path):
 def viterbi_sentence(sentence, gram_prob_dict, seg_to_tag_to_prob, tags, gram_level=2):
     padded_sentence = [BOS] * (gram_level - 1) + sentence + [EOS] * (gram_level - 1)\
 
-    matrix = [[0] * len(tags) for i in range(len(sentence))]
+    matrix = [[-1000] * len(tags) for i in range(len(sentence))]
     sentence_tag = []
-
     seg = sentence[0]
     for tag_index in range(len(tags)):
         tag = tags[tag_index]
-        matrix[0][tag_index] = gram_prob_dict[("NNP", tag)] + seg_to_tag_to_prob[seg][tag]
+        matrix[0][tag_index] = gram_prob_dict[(BOS, tag)] + seg_to_tag_to_prob[seg][tag]
 
     max_index, max_value = max(enumerate(matrix[0]), key=operator.itemgetter(1))
     sentence_tag.append(tags[max_index])
@@ -143,7 +142,7 @@ def viterbi_sentence(sentence, gram_prob_dict, seg_to_tag_to_prob, tags, gram_le
 
 
 def viterbi(parse_test, gram_result, seg_to_tag_to_prob, gram_level=2):
-    gram_prob_dict = gram_result[GRAM_PROB_DICT]
+    gram_prob_dict = gram_result[2][GRAM_PROB_DICT]
     tags = list({tags[0] for tags in gram_prob_dict})
     tagged_data = []
 
