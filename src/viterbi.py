@@ -7,7 +7,7 @@ import operator
 sys.path.append(os.path.abspath(os.path.join(__file__, "../..")))
 
 from consts import prob_post_processing, EOS, BOS, GRAM_PROB_DICT, WordAndTag
-from ex2.ex2 import get_segment_to_tags
+
 
 
 def split_to_grams(l, n):
@@ -122,7 +122,7 @@ def write_gram_file(parse_train_file, output_file_path, smooth=False):
     file = open(output_file_path + ".gram","w")
     file.write("\data\\\n")
     file.write("ngram %s = %s\n" % (1, gram_result['num_of_uni_gram']))
-    file.write("ngram %s = %s\n" % (2, gram_result['num_of_bi_gram']))\
+    file.write("ngram %s = %s\n" % (2, gram_result['num_of_bi_gram']))
     file.write("\n")
 
     for gram_level, gram_prob_by_order in [(1, gram_result['uni_gram_prob_by_order']), (2, gram_result['bi_gram_prob_by_order'])]:

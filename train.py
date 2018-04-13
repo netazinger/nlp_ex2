@@ -15,6 +15,7 @@ def train(model, train_file_path, smoothing=False):
 
     parsed_train = read_gold_and_train_file(train_file_path)
     _, file_name = os.path.split(train_file_path)
+    file_name, file_extension = os.path.splitext(file_name)
 
     if model == Model.BASELINE:
         write_train_baseline(parsed_train, file_name)

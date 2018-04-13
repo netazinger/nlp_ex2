@@ -1,17 +1,7 @@
-from evaluation import recall, f_score, macro_avg
-from parse_data import read_test_file, read_gold_and_train_file, read_lex_file, read_gram_file
-from consts import NUM_OF_GRAM, GRAM_PROB_DICT
 from decode import write_tagged_file
-
-from ex4.ex4 import calc_confusion_matrix, save_confusion_matrix, split_train_file
-
-from ex3.ex3 import viterbi
-
-print f_score({1,2}, {1})
-
-ff = [{(1, 1), (1, 2)}, {(1, 1), (1, 2)}]
-gg = [{(1, 1), (1, 2)}, {(1, 5), (1, 4)}]
-print macro_avg(ff, gg)
+from src.consts import NUM_OF_GRAM, GRAM_PROB_DICT
+from src.viterbi import viterbi
+from src.parse_data import read_test_file, read_lex_file, read_gram_file
 
 # file_path = '/Users/netazinger/Documents/universaty/nlp/ex2/nlp_ex2/data-files/heb-pos.test'
 # print len(read_test_file(file_path))
