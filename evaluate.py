@@ -3,6 +3,7 @@ import math
 import os
 import sys
 
+from src.utils import save_confusion_matrix, calc_confusion_matrix
 from src.consts import Model
 from src.parse_data import read_gold_and_train_file
 
@@ -69,7 +70,6 @@ def evaluate(tagged_file_path, model, gold_file_path, smoothing=False):
     file_name, file_extension = os.path.splitext(file_name)
 
     file = open(file_name + ".eval", "w")
-
     file.write(EVAL_TITLE_FORMAT.format(model=model, test_file=tagged_file_path, gold_file=gold_file_path,
                                         smoothing= "y" if smoothing else "f"))
 
@@ -84,6 +84,10 @@ def evaluate(tagged_file_path, model, gold_file_path, smoothing=False):
     file.write(EVAL_MACO_AVG_FORMAT.format(seg_accuracy_all=seg_accuracy_all, sent_accuracy_all=sent_accuracy_all))
     file.close()
 
+
+    # get confusion_matrix
+    confusion_matrix_dict = calc_confusion_matrix(parsed_tagged_file, parsed_gold_file)
+    save_confusion_matrix(confusion_matrix_dict, file_name)
 
 def main():
     if 5 != len(sys.argv):
