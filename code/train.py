@@ -22,8 +22,8 @@ def train(model, train_file_path, smoothing=False):
     if model == Model.BASELINE:
         write_train_baseline(parsed_train, file_name)
     elif model == Model.BI_GRAM:
-        write_lex_file(parsed_train, file_name)
-        write_gram_file(parsed_train, file_name)
+        write_lex_file(parsed_train, file_name, smooth=smoothing)
+        write_gram_file(parsed_train, file_name, smooth=smoothing)
         # write_gram_file(parsed_train, file_name, gram_level=2)
     elif model == Model.TRI_GRAM:
         write_gram_file(parsed_train, file_name, gram_level=3)
