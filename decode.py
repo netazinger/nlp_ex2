@@ -22,7 +22,6 @@ def write_tagged_file(tagged_file, file_name, extension=".tagged"):
 
 
 def decode(model, test_file_path, param_files_path):
-
     if model not in Model.ALL_MODELS:
         raise RuntimeError("model %s is not supported. only support : %s" % (model, Model.ALL_MODELS))
     parsed_test_file = read_test_file(test_file_path)
