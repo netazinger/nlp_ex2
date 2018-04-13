@@ -8,9 +8,10 @@ def print_word_and_tag(word_and_tag):
     return "{word} {tag}".format(word_and_tag.word, word_and_tag.tag)
 
 
-def prob_post_processing(prob):
-    return math.log(prob)
-
+def prob_post_processing(prob, do_log=True):
+    if do_log:
+        return math.log(prob) if prob else None
+    return prob
 
 class Model():
     BASELINE = 'baseline'
@@ -19,7 +20,7 @@ class Model():
 
     ALL_MODELS = {BASELINE, BI_GRAM, TRI_GRAM}
 
-
+LOG_PROB_OF_ZERO = -1000
 UNKNOWN_TAG = "NNP"
 UNKNOWN_SEG = "UNKNOWN_SEG"
 
