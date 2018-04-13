@@ -1,11 +1,11 @@
-import sys
 import os
+import sys
 
 sys.path.append(os.path.abspath(os.path.join(__file__, "../..")))
 
 from collections import defaultdict
 from consts import WordAndTag, UNKNOWN_TAG
-from ex2 import get_segment_to_tags, find_most_common_tag_for_segment, tag_file
+from src.baseline import get_segment_to_tags, find_most_common_tag_for_segment, tag_file
 
 def test_get_segment_to_tags():
     taged_data_set = [

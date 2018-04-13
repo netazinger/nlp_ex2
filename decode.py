@@ -1,12 +1,11 @@
 #!/usr/bin/env python
-import sys
 import os
+import sys
 
-from consts import WordAndTag, Model, GRAM_PROB_DICT
-from ex2.ex2 import read_train_baseline, tag_file
-from ex3.ex3 import viterbi
-from ex3_decoder.viterbi import Viterbi
-from parse_data import read_test_file, read_gram_file, read_lex_file
+from src.baseline import read_train_baseline, tag_file
+from src.consts import Model, GRAM_PROB_DICT
+from src.viterbi import viterbi
+from src.parse_data import read_test_file, read_gram_file, read_lex_file
 
 
 def print_word_and_tag(word_and_tag):

@@ -1,11 +1,11 @@
 #!/usr/bin/env python
-import sys
-import os
-
-from consts import WordAndTag, Model
 import math
+import os
+import sys
 
-from parse_data import read_gold_and_train_file
+from src.consts import Model
+from src.parse_data import read_gold_and_train_file
+
 EVAL_LINE_FORMAT = "{sent_num} {seg_accuracy} {sent_accuracy}\n"
 EVAL_MACO_AVG_FORMAT = "macro-avg {seg_accuracy_all} {sent_accuracy_all}"
 

@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from consts import WordAndTag, NUM_OF_GRAM, GRAM_PROB_DICT
+from src.consts import WordAndTag, NUM_OF_GRAM, GRAM_PROB_DICT
 
 END_OF_SENTENCE = '\n'
 END_OF_WORD = '\n'

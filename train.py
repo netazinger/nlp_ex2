@@ -1,14 +1,11 @@
 #!/usr/bin/env python
-import sys
 import os
+import sys
 
-
-from consts import WordAndTag, Model
-from ex2.ex2 import write_train_baseline
-from ex3.ex3 import write_gram_file, write_lex_file
-from parse_data import read_gold_and_train_file
-
-
+from src.baseline import write_train_baseline
+from src.consts import Model
+from src.viterbi import write_gram_file, write_lex_file
+from src.parse_data import read_gold_and_train_file
 
 
 def train(model, train_file_path, smoothing=False):
