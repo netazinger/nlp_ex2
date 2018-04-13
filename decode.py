@@ -12,8 +12,8 @@ def print_word_and_tag(word_and_tag):
     return "{word}\t{tag}".format(word=word_and_tag.word, tag=word_and_tag.tag)
 
 
-def write_tagged_file(tagged_file, file_name, exrantion=".tagged"):
-    file = open(file_name + exrantion,"w")
+def write_tagged_file(tagged_file, file_name, extension=".tagged"):
+    file = open(file_name + extension, "w")
     for tagged_sentance in tagged_file:
         for word_and_tag in tagged_sentance:
             file.write(print_word_and_tag(word_and_tag) + '\n')
@@ -27,10 +27,8 @@ def decode(model, test_file_path, param_files_path):
         raise RuntimeError("model %s is not supported. only support : %s" % (model, Model.ALL_MODELS))
     parsed_test_file = read_test_file(test_file_path)
 
-
     _, file_name = os.path.split(test_file_path)
     file_name, file_extension = os.path.splitext(file_name)
-
 
     if model == Model.BASELINE:
         segment_to_tag = read_train_baseline(param_files_path[0])
@@ -51,17 +49,10 @@ def decode(model, test_file_path, param_files_path):
         lex_file = read_lex_file(lex_path)
         gram_prob_dict = gram_file[1][GRAM_PROB_DICT]
         tags = list({tags[0] for tags in gram_prob_dict})
-        # viterbi = Viterbi(tags)
-        # sentence = ["yyQUOT THIH NQMH W BGDWL yyDOT","AIF LA NISH LHSTIR ZAT yyDOT","AIF LA	NPGE yyDOT"]
-        # tagged_file = viterbi.algoritem(parsed_test_file, gram_file[2][GRAM_PROB_DICT], lex_file)
-
         tagged_file = viterbi(parsed_test_file, gram_file, lex_file, gram_level=2)
         write_tagged_file(tagged_file, file_name)
     elif model == Model.TRI_GRAM:
         pass
-
-
-
 
 
 def main():
