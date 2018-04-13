@@ -4,7 +4,7 @@ import math
 from collections import Counter, defaultdict
 import operator
 
-sys.path.append(os.path.abspath(os.path.join(__file__, "../..")))
+
 
 from consts import prob_post_processing, EOS, BOS, GRAM_PROB_DICT, WordAndTag
 
@@ -15,7 +15,7 @@ def split_to_grams(l, n):
         yield tuple(l[i:i + n])
 
 
-def calc_prob(count_bi_gram, count_uni_gram, corp_size=0, smooth=False, delta=.1):
+def calc_prob(count_bi_gram, count_uni_gram, corp_size=0, smooth=False, delta=.0001):
     if not smooth:
         corp_size = 0
         delta = 0
@@ -40,7 +40,7 @@ def calc_lex_result(parse_train_file, smooth=False):
         for tag in all_tags:
             word_tag_count = float(word_tag_counter[(seg, tag)])
             prob = calc_prob(word_tag_count,  tag_counter[tag], corp_size=len(all_tags), smooth=smooth)
-            if prob:
+            if prob is not None:
                 seg_to_tag_to_prob[seg][tag] = prob
 
     # if smooth:

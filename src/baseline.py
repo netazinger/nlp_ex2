@@ -6,9 +6,6 @@ from collections import Counter
 
 from consts import WordAndTag, UNKNOWN_TAG, Model
 
-sys.path.append(os.path.abspath(os.path.join(__file__, "../..")))
-
-
 def get_segment_to_tags(taged_data_set):
     segment_to_tags = defaultdict(list)
 

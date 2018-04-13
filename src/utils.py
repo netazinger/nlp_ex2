@@ -2,7 +2,6 @@ import sys
 import os
 from collections import Counter, defaultdict
 
-sys.path.append(os.path.abspath(os.path.join(__file__, "../..")))
 from parse_data import read_gold_and_train_file
 from decode import write_tagged_file
 
