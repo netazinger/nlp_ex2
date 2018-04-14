@@ -42,8 +42,8 @@ def decode(model, test_file_path, param_files_path):
 
         if {file_extension_0, file_extension_1} != {".lex", ".gram"}:
             raise RuntimeError("wrong file extension. got: %s, %s" % (file_extension_0, file_extension_1))
-        lex_path =  param_files_path[0] if file_extension_0 == ".lex" else param_files_path[1]
-        gram_path =  param_files_path[0] if file_extension_0 == ".gram" else param_files_path[1]
+        lex_path = param_files_path[0] if file_extension_0 == ".lex" else param_files_path[1]
+        gram_path = param_files_path[0] if file_extension_0 == ".gram" else param_files_path[1]
         gram_file = read_gram_file(gram_path)
         lex_file = read_lex_file(lex_path)
         gram_prob_dict = gram_file[1][GRAM_PROB_DICT]
