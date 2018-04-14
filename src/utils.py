@@ -24,7 +24,7 @@ def find_max_confusion_matrix(confusion_matrix_dict, num_of_max=3):
         for tag_2 in sorted_tags:
             if tag_1 != tag_2:
                 flatten_metrix.append((tag_1, tag_2, confusion_matrix_dict[tag_1][tag_2]))
-    print sorted(flatten_metrix, key=lambda x: -x[2])[:num_of_max]
+    return sorted(flatten_metrix, key=lambda x: -x[2])[:num_of_max]
 
 
 def save_confusion_matrix(confusion_matrix_dict, file_name):
