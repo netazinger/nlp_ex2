@@ -4,18 +4,14 @@ import math
 from collections import Counter, defaultdict
 import operator
 
-
-
 from consts import prob_post_processing, EOS, BOS, GRAM_PROB_DICT, WordAndTag
-
-
 
 def split_to_grams(l, n):
     for i in range(0, len(l) - n + 1):
         yield tuple(l[i:i + n])
 
 
-def calc_prob(count_bi_gram, count_uni_gram, corp_size=0, smooth=False, delta=.00001):
+def calc_prob(count_bi_gram, count_uni_gram, corp_size=0, smooth=False, delta=.0006):
     if not smooth:
         corp_size = 0
         delta = 0
@@ -161,10 +157,12 @@ def viterbi_sentence(sentence, gram_prob_dict, seg_to_tag_to_prob, tags, gram_le
     for i in range(gram_level - 1,  len(sentence)):
         seg = sentence[i]
         for tag_index in range(len(tags)):
+            tag = tags[tag_index]
             v_s = []
             if seg in seg_to_tag_to_prob:
                 for tag_index_1 in range(len(tags)):
-                    v_s_prob = gram_prob_dict[(tags[tag_index_1], tag)] + seg_to_tag_to_prob[seg][tags[tag_index]] # + matrix[i - 1][tag_index_1]
+
+                    v_s_prob = gram_prob_dict[(tags[tag_index_1], tag)] + seg_to_tag_to_prob[seg][tags[tag_index]]  + matrix[i - 1][tag_index_1]
                     v_s.append(v_s_prob)
                 max_index, max_value = max(enumerate(v_s), key=operator.itemgetter(1))
                 matrix[i][tag_index] = max_value
