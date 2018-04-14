@@ -112,8 +112,14 @@ def calc_gram_result(parse_train_file, gram_level=1, smooth=False):
     else:
         bi_gram_to_prob = {bi_gram:calc_prob(count,  uni_gram_count[(bi_gram[0],)], corp_size=uni_gram_list_length, smooth=smooth) for bi_gram, count in bi_gram_count.iteritems()}
 
-    uni_gram_prob_by_order = sorted([(gram, prob) for gram, prob in uni_gram_to_prob.iteritems()], key=lambda x: x[1])
-    bi_gram_prob_by_order = sorted([(gram, prob) for gram, prob in bi_gram_to_prob.iteritems()], key=lambda x: x[1])
+    uni_gram_prob_by_order = sorted([(gram, prob) for gram, prob in uni_gram_to_prob.iteritems()], key=lambda x: -x[1])
+    bi_gram_prob_by_order = sorted([(gram, prob) for gram, prob in bi_gram_to_prob.iteritems()], key=lambda x: -x[1])
+
+    if not smooth:
+        nnp = ("NNP", )
+        nnp_tup = (nnp, uni_gram_to_prob[nnp])
+        uni_gram_prob_by_order.remove(nnp_tup)
+        uni_gram_prob_by_order = [nnp_tup] + uni_gram_prob_by_order
 
     return {
         "num_of_uni_gram": len(set(uni_gram_list)),
@@ -147,7 +153,10 @@ def viterbi_sentence(sentence, gram_prob_dict, seg_to_tag_to_prob, tags, gram_le
     seg = sentence[0]
     for tag_index in range(len(tags)):
         tag = tags[tag_index]
-        matrix[0][tag_index] = gram_prob_dict[(BOS, tag)] + seg_to_tag_to_prob[seg][tag]
+        if seg not in seg_to_tag_to_prob:
+            matrix[0][tag_index] = 0 if tag_index == 0 else -100
+        else:
+            matrix[0][tag_index] = gram_prob_dict[(BOS, tag)] + seg_to_tag_to_prob[seg][tag]
 
     for i in range(gram_level - 1,  len(sentence)):
         seg = sentence[i]
@@ -160,8 +169,7 @@ def viterbi_sentence(sentence, gram_prob_dict, seg_to_tag_to_prob, tags, gram_le
                 max_index, max_value = max(enumerate(v_s), key=operator.itemgetter(1))
                 matrix[i][tag_index] = max_value
             else:
-                matrix[i][tag_index] = 0 if tags[tag_index] == "NNP" else -100
-
+                matrix[i][tag_index] = 0 if tag_index == 0 else -100
 
     for i in range(len(sentence)):
         max_index, max_value = max(enumerate(matrix[i]), key=operator.itemgetter(1))
@@ -173,7 +181,9 @@ def viterbi_sentence(sentence, gram_prob_dict, seg_to_tag_to_prob, tags, gram_le
 
 def viterbi(parse_test, gram_result, seg_to_tag_to_prob, gram_level=2):
     gram_prob_dict = gram_result[2][GRAM_PROB_DICT]
-    tags = list({tags[0] for tags in gram_prob_dict})
+    # tags = [(tags[0], prob) for tags, prob in gram_result[1][GRAM_PROB_DICT].itervalues()]
+    bi_gram_prob_by_order = sorted([(gram[0], prob) for gram, prob in gram_result[1][GRAM_PROB_DICT].iteritems()], key=lambda x: -x[1])
+    tags = map(lambda x: x[0], bi_gram_prob_by_order)
     tagged_data = []
 
 
