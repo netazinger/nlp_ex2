@@ -3,7 +3,7 @@ import math
 import os
 import sys
 
-from src.utils import save_confusion_matrix, calc_confusion_matrix
+from src.utils import save_confusion_matrix, calc_confusion_matrix, find_max_confusion_matrix
 from src.consts import Model
 from src.parse_data import read_gold_and_train_file
 
@@ -84,10 +84,13 @@ def evaluate(tagged_file_path, model, gold_file_path, smoothing=False):
     file.write(EVAL_MACO_AVG_FORMAT.format(seg_accuracy_all=seg_accuracy_all, sent_accuracy_all=sent_accuracy_all))
     file.close()
 
+    print seg_accuracy_all, sent_accuracy_all
+
 
     # get confusion_matrix
     confusion_matrix_dict = calc_confusion_matrix(parsed_tagged_file, parsed_gold_file)
     save_confusion_matrix(confusion_matrix_dict, file_name)
+    print find_max_confusion_matrix(confusion_matrix_dict)
 
 def main():
     if 5 != len(sys.argv):
