@@ -5,7 +5,7 @@ from Core.Reader import Reader
 from Services.Utile import SegmentCalculator
 def main():
 
- path = os.getcwd() + "\\data-files\\heb-pos.train"
+ path = os.getcwd() + "\\data_files\\heb-pos.gold"
  reader = Reader(path)
  sentence =  reader.read_sentences_from_file()
  segmentCalculator = SegmentCalculator(sentence)
